@@ -29,25 +29,21 @@ class App extends Component {
 
   }
   createTodo(todoText) {
-    // your code goes here
     let newTodo = { title: todoText, createdAt: new Date };
+
     axios({
       url: '/todos.json',
       baseURL: 'https://todo-793dc.firebaseio.com/',
-      method: 'POST',
+      method: "POST",
       data: newTodo
-    })
-    .then((res) => {
+    }).then((response) => {
       let todos = this.state.todos;
-      todos[res.data.time] = newTodo;
-      // set the state after pushing the todo item to firebase
-      this.setState({
-        todos
-      })
-    })
-    .catch((err) => {
-      console.log(err);
-    })
+      let newTodoId = response.data.name;
+      todos[newTodoId] = newTodo;
+      this.setState({ todos: todos });
+    }).catch((error) => {
+      console.log(error);
+    });
   }
 
   deleteTodo(todoId) {
