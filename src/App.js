@@ -9,6 +9,7 @@ class App extends Component {
 
     this.handleNewTodoInput = this.handleNewTodoInput.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
+    this.selectTodo = this.selectTodo.bind(this);
   }
 
   componentDidMount() {
@@ -61,6 +62,25 @@ class App extends Component {
     });
   }
 
+  selectTodo(todoId) {
+    this.setState({ currentTodo: todoId });
+  }
+
+  renderSelectedTodo() {
+    let content;
+
+    if (this.state.currentTodo) {
+      let currentTodo = this.state.todos[this.state.currentTodo];
+      content =  (
+        <div>
+          <h1>{currentTodo.title}</h1>
+        </div>
+      );
+    }
+
+    return content;
+  }
+
   handleNewTodoInput(event) {
     if (event.charCode === 13) {
       this.createTodo(event.target.value);
@@ -76,7 +96,7 @@ class App extends Component {
     );
   }
 
-  renderTodoList() {
+   renderTodoList() {
     let todoElements = [];
 
     for(let todoId in this.state.todos) {
@@ -84,7 +104,7 @@ class App extends Component {
 
       todoElements.push(
         <div className="todo d-flex justify-content-between pb-4" key={todoId}>
-          <div className="mt-2">
+          <div className="mt-2" onClick={ () => this.selectTodo(todoId) }>
             <h4>{todo.title}</h4>
             <div>{moment(todo.createdAt).calendar()}</div>
           </div>
@@ -112,6 +132,9 @@ class App extends Component {
           <div className="col-6 px-4">
             {this.renderNewTodoBox()}
             {this.renderTodoList()}
+          </div>
+          <div className="col-6 px-4">
+            {this.renderSelectedTodo()}
           </div>
         </div>
       </div>
